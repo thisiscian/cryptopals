@@ -3,7 +3,7 @@ from importlib import import_module
 import glob
 
 def get_challenges(set_name, module):
-    for i in range(1, 8):
+    for i in range(1, 9):
         challenge = '{}.challenge_{}'.format(set_name, i)
         try:
             m = import_module(challenge, module)
@@ -12,7 +12,7 @@ def get_challenges(set_name, module):
             yield challenge, None
 
 def get_sets():
-    for i in range(1, 8):
+    for i in range(1, 9):
         set_name = 'set_{}'.format(i)
         try:
             m = import_module(set_name)
