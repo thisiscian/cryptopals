@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from importlib import import_module
 import glob
 
