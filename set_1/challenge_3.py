@@ -3,7 +3,7 @@
 # https://cryptopals.com/sets/1/challenges/3
 
 from string import printable
-from generate_frequencies import main as get_frequency
+from .generate_frequencies import main as get_frequency
 
 printable_frequency = get_frequency()
 
@@ -34,13 +34,11 @@ def single_byte_xor_cipher(hex_string: str) -> str:
         h = ord(c)
         xor_bytes = bytes(b ^ h for b in str_bytes)
         xor_string = xor_bytes.decode()
-        freq = get_simple_frequency(xor_string)
+        freq = get_frequency(xor_string)
         score = score_frequency(freq)
         if best is None or best > score:
             best = score
             output = xor_string
-        if c in 'wxy':
-            print(c, xor_string, score)
 
     return output
 

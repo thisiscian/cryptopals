@@ -35,7 +35,7 @@ def main():
                     try:
                         challenge_module.main()
                         status += u'\x1b[30;42;1m\u2713\x1b[0m'
-                    except:
+                    except AssertionError:
                         status += u'\x1b[30;41;1m\u2717\x1b[0m'
                         pass
             print(set_name, status)
