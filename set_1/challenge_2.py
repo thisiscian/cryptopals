@@ -2,11 +2,13 @@
 # fixed xor
 # https://cryptopals.com/sets/1/challenges/2
 
+
 def fixed_xor(hex_a: str, hex_b: str) -> str:
     a = int(hex_a, 16)
     b = int(hex_b, 16)
     c = a ^ b
     return '{:x}'.format(c)
+
 
 def main():
     test_inputs = [
@@ -16,6 +18,7 @@ def main():
     test_output = '746865206b696420646f6e277420706c6179'
     output = fixed_xor(*test_inputs)
     assert output == test_output
+
 
 if __name__ == '__main__':
     main()
