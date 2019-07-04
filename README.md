@@ -5,7 +5,7 @@ solutions to [Cryptopal](https://cryptopals.com) problems
   - [X] [Fixed XOR](https://cryptopals.com/sets/1/challenges/2)
   - [X] [Single-byte XOR cipher](https://cryptopals.com/sets/1/challenges/3)
   - [X] [Detect single-character XOR](https://cryptopals.com/sets/1/challenges/4)
-  - [ ] [Implement repeating-key XOR](https://cryptopals.com/sets/1/challenges/5)
+  - [X] [Implement repeating-key XOR](https://cryptopals.com/sets/1/challenges/5)
   - [ ] [Break repeating-key XOR](https://cryptopals.com/sets/1/challenges/6)
   - [ ] [AES in ECB mode](https://cryptopals.com/sets/1/challenges/7)
   - [ ] [Detect AES in ECB mode](https://cryptopals.com/sets/1/challenges/8)
