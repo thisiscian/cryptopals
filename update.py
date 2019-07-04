@@ -118,7 +118,7 @@ def get_progress():
 
 def main():
     progress = get_progress()
-    print('#Cryptopals progress')
+    print('# Cryptopals progress')
     print('solutions to [Cryptopal](https://cryptopals.com) problems')
     for i, challenges in enumerate(progress):
         I = i + 1
