@@ -1,5 +1,83 @@
 #!/usr/bin/python
+import argparse
+import json
+import re
+import requests
+from html.parser import HTMLParser
 from importlib import import_module
+
+cryptopals_json = {
+    'base_url': 'https://cryptopals.com',
+    'sets': {}
+}
+challenges = []
+
+class CryptoPalsHTMLParser(HTMLParser):
+    set_id = None
+    challenge_id = None
+    def handle_starttag(self, tag, attrs):
+        for key, value in attrs:
+            set_match = re.match('/sets/(\d+)$', value)
+            challenge_match = re.match('/sets/(\d+)/challenges/(\d+)$', value)
+            if key == 'href' and set_match:
+                self.set_id = int(set_match.group(1))
+                if self.set_id in cryptopals_json['sets']:
+                    self.set_id = None
+                    continue
+                print('set', self.set_id, value)
+                cryptopals_json['sets'][self.set_id] = {
+                    'url': value,
+                    'title': None,
+                    'completion': None,
+                    'challenges': {}
+                }
+            elif key == 'href' and challenge_match:
+                self.set_id = int(challenge_match.group(1))
+                self.challenge_id = int(challenge_match.group(2))
+                print('set', self.set_id, 'challenge', self.challenge_id)
+                cryptopals_json['sets'][self.set_id]['challenges'][self.challenge_id] = {
+                    'url': value,
+                    'title': None,
+                    'completed': None,
+                }
+
+                self.do_handle_challenge = True
+                challenges.append([value])
+
+    def handle_data(self, data):
+        if self.set_id is not None and self.challenge_id is not None:
+            cryptopals_json['sets'][self.set_id]['challenges'][self.challenge_id]['title'] = data
+        elif self.set_id is not None:
+            cryptopals_json['sets'][self.set_id]['title'] = data
+
+    def handle_endtag(self, tag):
+        set_id = self.set_id
+        challenge_id = self.challenge_id
+        self.set_id = None
+        self.challenge_id = None
+
+        if set_id is not None and challenge_id is None:
+            set_url = cryptopals_json['sets'][set_id]['url']
+            url = cryptopals_json['base_url'] + set_url
+            
+            response = requests.get(url)
+            self.feed(response.text)
+
+html_parser = CryptoPalsHTMLParser()
+response = requests.get(cryptopals_json['base_url'])
+try:
+    html_parser.feed(response.text)
+except AssertionError:
+    pass
+
+for set_json in cryptopals_json['sets']:
+    print(set_json)
+    
+print(cryptopals_json)
+
+exit(1)
+
+
 
 set_format = 'https://cryptopals.com/sets/{}'
 challenge_format = 'https://cryptopals.com/sets/{}/challenges/{}'
@@ -116,17 +194,24 @@ def get_progress():
             output.append(set_output)
     return output
 
+def update_readme():
+    with open('README.md', 'w') as fh:
+        progress = get_progress()
+        fh.write('# Cryptopals progress\n')
+        fh.write('solutions to [Cryptopal](https://cryptopals.com) problems\n')
+        for i, challenges in enumerate(progress):
+            I = i + 1
+            fh.write('- [Set {}]({})\n'.format(I, set_format.format(I)))
+            for j, status in enumerate(challenges):
+                J = j + 1
+                title = sets[i][j]
+                challenge_url = challenge_format.format(I, J)
+                fh.write('  - [{}] [{}]({})'.format('X' if status else ' ',
+                                                    title,
+                                                    challenge_url))
+
 def main():
-    progress = get_progress()
-    print('# Cryptopals progress')
-    print('solutions to [Cryptopal](https://cryptopals.com) problems')
-    for i, challenges in enumerate(progress):
-        I = i + 1
-        print('- [Set {}]({})'.format(I, set_format.format(I)))
-        for j, status in enumerate(challenges):
-            print('  - [{}] [{}]({})'.format('X' if status else ' ',
-                                             sets[i][j],
-                                             challenge_format.format(I, j + 1)))
+    pass
 
 if __name__ == '__main__':
-    main()
+    update_readme()
