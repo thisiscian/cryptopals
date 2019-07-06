@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import importlib
 import json
 import re
