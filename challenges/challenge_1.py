@@ -4,8 +4,8 @@
 # - Challenge #1: Convert hex to base64
 #   see https://cryptopals.com/sets/1/challenges/1
 
-def main():
-    pass
+import base64
 
-if __name__ == "__main__":
-    main()
+def main(hex_string: str) -> str:
+    '''Converts hex encoded str -> bytes -> base64 encoded bytes -> str'''
+    return base64.b64encode(bytes.fromhex(hex_string)).decode()

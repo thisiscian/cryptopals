@@ -8,8 +8,9 @@ from collections import Counter
 
 shakespeare = requests.get('https://ocw.mit.edu/ans7870/6/6.006/s08/'
                            'lecturenotes/files/t8.shakespeare.txt').text
-eng_freq = Counter(shakespeare)
-
+lang_freq = {
+        'en': Counter(shakespeare)
+}
 
 class XOR:
     @classmethod
@@ -128,7 +129,7 @@ def guess_decode_single_character_xor(s: str) -> str:
     for c in string.printable:
         try:
             xor_string = XOR.toString(s, c)
-            score = score_string(xor_string)
+            score = language_score(xor_string)
 
             if best_score is None or best_score < score:
                 best_score = score
@@ -140,14 +141,20 @@ def guess_decode_single_character_xor(s: str) -> str:
 
     return best_score, best_character, output
 
-def score_string(string: str) -> float:
-    a = eng_freq
+def language_score(string: str, lang: str='en') -> float:
+    '''Scores how similar the letter frequency of the supplied string is to
+       the letter frequency of a large body of language in the same language'''
+    a = lang_freq[lang]
     b = Counter(string)
+
+    # this is something like the normalised dot product of these two dicts
+    # score = sum(a_i * b_i) / (sqrt(sum(a_i^2)) + sqrt(sum(b_i^2)))
     shared_keys = set(a.keys()).intersection(set(b.keys()))
     top = sum([a[k] * b[k] for k in shared_keys])
     bottom = (math.sqrt(sum([v * v for v in a.values()])) *
               math.sqrt(sum([v * v for v in b.values()])))
 
+    # if one of the groups is totally empty, we can get bottom = 0
     if bottom == 0:
         return 0
 
