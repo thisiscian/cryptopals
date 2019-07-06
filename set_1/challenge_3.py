@@ -2,34 +2,30 @@
 # single-byte xor cipher
 # https://cryptopals.com/sets/1/challenges/3
 
+from .. import util
 from string import ascii_letters, printable
-from .generate_frequencies import score_string
 
 
-def decode_single_xor(hex_string: str, alphabet: str = printable) -> str:
+def decode_single_xor(hex_string: str) -> str:
     best_score = None
     output = None
-    str_bytes = bytes.fromhex(hex_string)
     for c in printable:
-        h = ord(c)
-        xor_bytes = bytes(b ^ h for b in str_bytes)
         try:
-            xor_string = xor_bytes.decode('utf-8')
-            score = score_string(xor_string)
-            if score > 1:
-                continue
+            xor_string = util.XOR.toString(hex_string, c)
+            score = util.score_string(xor_string)
 
             if best_score is None or best_score < score:
+                print(score, output)
                 best_score = score
                 output = xor_string
         except UnicodeDecodeError:
             continue
 
-    return output, best_score
+    return output, c, best_score
 
 
 def single_byte_xor_cipher(hex_string: str) -> str:
-    output, best_score = decode_single_xor(hex_string)
+    score, char, output = util.guess_decode_single_character_xor(hex_string)
     return output
 
 

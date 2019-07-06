@@ -2,20 +2,20 @@
 # detecting single-character xor
 # https://cryptopals.com/sets/1/challenges/4
 
-from .challenge_3 import decode_single_xor
 import requests
+from .. import util
 
 def detect_single_character_xor(string: str) -> str:
     best_score = None
     output = None
     for line in string.splitlines():
-        guess, score = decode_single_xor(line)
+        score, char, xor_string = util.guess_decode_single_character_xor(line)
         if score is None:
             continue
 
         if best_score is None or score > best_score:
             best_score = score
-            output = guess
+            output = xor_string
 
     return output
 

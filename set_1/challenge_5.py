@@ -2,14 +2,16 @@
 # implement repeating-key XORG
 # https://cryptopals.com/sets/1/challenges/5
 
+from .. import util
+
 def repeating_key_xor(string: str, key: str) -> str:
     encoding = 'utf-8'
     str_bytes = bytes(string, encoding)
     key_bytes = bytes(key, encoding)
     l = len(key_bytes)
-    
+
     xor_bytes = bytes(b ^ key_bytes[i % l] for i, b in enumerate(str_bytes))
-    return xor_bytes.hex()
+    return util.BytesConverter.toHexString(xor_bytes)
 
 def main():
     test_inputs = [
