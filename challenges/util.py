@@ -160,3 +160,11 @@ def language_score(string: str, lang: str='en') -> float:
 
     v = top / bottom
     return v
+
+
+def hamming_dist(a: bytes, b: bytes):
+    c_bytes = bytes(A ^ B for A, B in zip(a, b))
+    counts = sum(bin(x).count("1") for x in c_bytes)
+    return counts
+
+
